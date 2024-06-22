@@ -6,9 +6,20 @@ const categories = require('./data/categories.json');
 
 const news = require('./data/news.json');
 
+const allowedOrigins = ['https://the-daily-spark.web.app'];
+
 const cors = require('cors');
 
-app.use(cors())
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true // Allow cookies to be sent with the requests
+}));
 
 app.get('/', (re, res) => {
     res.send('Spark is running')
